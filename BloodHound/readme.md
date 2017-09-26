@@ -1,5 +1,5 @@
 # BloodHound
-* Author: 5h4d0W0lf
+* Author: 5h4d0wb0y
 * Version: Version 1.0
 * Target: Windows
 
@@ -21,7 +21,7 @@ Option to change payload.txt to webDL the powershell script by commenting line 5
 
 ## Download
 
-https://github.com/5h4d0W0lf/bashbunny-payloads/tree/master/BloodHound
+https://github.com/5h4d0wb0y/bashbunny-payloads/tree/master/BloodHound
 
 
 ## Install

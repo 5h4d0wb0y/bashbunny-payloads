@@ -2,7 +2,7 @@
 #
 # Title:         SharpHound
 # Description:   Six Degrees of Domain Admin
-# Author:        5h4d0W0lf
+# Author:        5h4d0wb0y
 # Version:       1.0
 # Category:      Exfiltration
 # Target:        Windows XP SP3+ (Powershell)
